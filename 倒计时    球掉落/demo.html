@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<style>
+		canvas{
+			background: #ccc;
+		}
+	</style>
+</head>
+<body>
+	<canvas width="1000" height="600"></canvas>
+</body>
+</html>
+<script src="digit.js"></script>
+<script>
+var can=document.querySelector("canvas");
+var pen=can.getContext("2d");
+var time;
+var timeArr=[];
+var balls=[];
+var colors=[
+		"Aqua","Fuchsia","Gray","Lime","Blue","Yellow","Red"
+	]
+
+setInterval(function(){
+	var date=getDate();
+	if(date!==getDate()){
+		for(var i=0;i<balls.length;i++){
+			balls[i].status=1;
+		}
+	}
+	for(var l=0;l<date.length;l++){
+		drawNum(digit[date[l]],10,10,l*150+100,50,'#660000');
+
+	}
+	drawNum(digit[10],10,10,340,50,'#660000');
+	drawNum(digit[10],10,10,640,50,'#660000');
+	// drawNum(digit[date[10]],10,10,2*100+100,50,'green');
+	// drawNum(digit[date[2]],10,10,3*100+100,50,'green');
+	// drawNum(digit[date[3]],10,10,4*100+100,50,'green');
+	// drawNum(digit[date[10]],10,10,5*100+100,50,'green');
+	// drawNum(digit[date[4]],10,10,6*100+100,50,'green');
+	// drawNum(digit[date[5]],10,10,7*100+100,50,'green');
+},1000)
+
+setInterval(function(){
+			pen.clearRect(0,0,1000,600);
+			for(var k=0;k<balls.length;k++){
+				if(balls[k].status==1){
+					var cNum=Math.ceil(Math.random()*(colors.length));
+					balls[k].v+=balls[k].g;
+					balls[k].y_+=balls[k].v;
+					balls[k].x_+=balls[k].xv;
+					balls[k].c_=colors[cNum];
+					if(balls[k].y_>=400){
+						balls[k].y_=400;
+						balls[k].v=-balls[k].v*0.8;
+					}
+				}
+				
+				drawArc(balls[k].x_,balls[k].y_,balls[k].px_,balls[k].py_,balls[k].c_);
+				
+			}
+},1000/24);
+function drawNum(arr,x,y,px,py,c){
+	for(var i=0;i<arr.length;i++){
+		for(var j=0;j<arr[i].length;j++){
+			if(arr[i][j]==1){
+				balls.push({
+					x_:j*x,
+					y_:i*y,
+					px_:px,
+					py_:py,
+					c_:c,
+					g:4,
+					v:0,
+					xv:Math.pow(-1,Math.ceil(Math.random()*10))*5,
+					status:0
+				})		
+			}
+		}
+	}
+	
+	
+}
+
+function drawArc(x,y,px,py,c){		
+	pen.beginPath();
+	pen.fillStyle=c;
+	pen.arc(x+px,y+py,5,0,Math.PI*2);
+	pen.fill();
+	pen.closePath();
+}	
+
+function getDate(){
+	var date=new Date();
+	var h=date.getHours().toString();
+	var m=date.getMinutes().toString();
+	var s=date.getSeconds().toString();
+	if(h.length==1){
+		h="0"+h;
+	}
+	if(m.length==1){
+		m="0"+m;
+	}
+	if(s.length==1){
+		s="0"+s;
+	}
+
+	// console.log((h+m+s).split(""));
+	return (h+m+s).split("");
+
+}
+
+
+	
+</script>

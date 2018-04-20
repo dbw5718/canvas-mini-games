@@ -1,0 +1,79 @@
+@charset "UTF-8";
+* {
+  margin: 0;
+  padding: 0; }
+
+html, body {
+  height: 100%; }
+
+.donkeyJump {
+  width: 480px;
+  height: 800px;
+  position: absolute;
+  top: 0;
+  left: 50%;
+  margin-left: -240px; }
+  .donkeyJump .gameCover {
+    width: 480px;
+    height: 800px;
+    background: url("../images/background.jpg") no-repeat;
+    /* //进度条 */ }
+    .donkeyJump .gameCover .font {
+      width: 400px;
+      height: 20px;
+      position: absolute;
+      top: 530px;
+      left: 40px;
+      color: #fff; }
+      .donkeyJump .gameCover .font .number, .donkeyJump .gameCover .font .percent {
+        float: left;
+        height: 20px; }
+    .donkeyJump .gameCover .progress {
+      width: 400px;
+      height: 30px;
+      background: transparent;
+      position: absolute;
+      top: 550px;
+      left: 30px; }
+    .donkeyJump .gameCover .progressbar {
+      width: 0;
+      height: 30px;
+      background: #ccc; }
+    .donkeyJump .gameCover .btn_begin {
+      width: 166px;
+      height: 106px;
+      position: absolute;
+      left: 170px;
+      top: 630px;
+      background: url("../images/btn_begin.png") no-repeat; }
+    .donkeyJump .gameCover .btn_begin:hover {
+      background: url("../images/btn_begin_1.png") no-repeat; }
+  .donkeyJump .gameBody {
+    display: none;
+    width: 480px;
+    height: 800px; }
+    .donkeyJump .gameBody .gameCanvas {
+      width: 480px;
+      height: 800px; }
+  .donkeyJump .gameOver {
+    display: none;
+    width: 480px;
+    height: 800px;
+    background: url("../images/background.jpg") -480px 0 no-repeat; }
+    .donkeyJump .gameOver .score {
+      font-size: 40px;
+      position: absolute;
+      left: 120px;
+      top: 490px;
+      color: #CC9966; }
+    .donkeyJump .gameOver .btn_prepare {
+      width: 166px;
+      height: 106px;
+      position: absolute;
+      left: 170px;
+      top: 630px;
+      background: url("../images/btn_prepare.png") no-repeat; }
+    .donkeyJump .gameOver .btn_prepare:hover {
+      background: url("../images/btn_prepare_1.png") no-repeat; }
+
+/*# sourceMappingURL=css.css.map */

@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>打气球</title>
+	<style>
+		*{
+			padding: 0;
+			margin: 0;
+		}
+		html,body{
+			height: 100%;
+		}
+		.left{
+			float: left;
+		}
+		.right{
+			float: left;
+		}
+		canvas{
+			background: url('timg.jpg');
+			background-size: cover;
+			cursor: url("mz.png"),auto;
+		}
+	</style>
+</head>
+<body>
+
+	<div class="left">
+		<canvas width="800" height="700"></canvas>	
+	</div>
+	<div class="right">
+		<h1>分数:</h1>
+		<h1 class="font"></h1>
+	</div>
+</body>
+</html>
+<script>
+var can=document.querySelector("canvas");
+var font=document.querySelector(".font");
+var pen=can.getContext("2d");
+var arr=["qiqiu.png"];
+var balls=[];
+var n,number=0;
+
+
+
+setInterval(function(){
+	balls.push({
+		x:Math.ceil(Math.random()*700),
+		y:700,
+		s:Math.ceil(Math.random()*20),
+		j:Math.floor(Math.random()*3)
+	})
+},2000)
+
+
+lazyload(function(data){
+	setInterval(function(){
+		pen.clearRect(0,0,800,700);
+		for(var i=0;i<balls.length;i++){
+			if(balls[i].y<=0){
+				pen.font="100px Arial";
+				pen.fillText("Game Over!",100,350);
+				// balls.splice(0,balls.length);
+				return;
+
+			}
+
+			pen.drawImage(data.qiqiu,balls[i].j*75.5,0,75.5,125,balls[i].x,balls[i].y-=balls[i].s,75.5,125);
+
+		}
+	},1000/24)
+
+})
+
+window.onmousedown=function(e){
+	for(var i=0;i<balls.length;i++){
+		
+		if(touch(balls[i].x,balls[i].y,75.5,125,e.pageX,e.pageY)){
+			
+			
+			if(balls[i].j==0){
+		
+				n=1;
+			}
+			if(balls[i].j==1){
+				
+				n=2;
+			}
+			if(balls[i].j==2){
+				
+				n=3;
+			}
+			number +=n;
+			font.innerHTML=number;
+			console.log(number);
+			balls.splice(i,1);
+			
+		}
+		
+	}
+
+	
+}	
+
+//懒加载   图片
+function lazyload(fun){
+	var len=arr.length;
+	var load=0;
+	var images={};
+	for(var i=0;i<len;i++){
+		var img=new Image();
+		img.onload=function(){
+			load++;
+			if(load==len){
+				// alert("全部加载完成");
+				fun(images);
+			}
+		}
+		img.src=arr[i];
+		// console.log(img);
+		// document.body.appendChild(img);
+		var name=arr[i].split(".")[0];
+		images[name]=img;
+
+	}
+}
+
+function touch(x1,y1,w1,h1,x2,y2){
+	if(x1>x2 ||y1>y2 || x2>x1+w1 ||y2>y1+h1){
+		return  false;
+	}else{
+		return true;
+	}
+}
+</script>

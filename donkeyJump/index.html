@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>驴子跳</title>
+	<link rel="stylesheet" href="css/css.css">
+</head>
+<body>
+	<div class="donkeyJump">
+		<div class="gameCover">
+			<div class="font">
+				<div class="number">0</div>
+				<div class="percent">%</div>
+			</div>
+			<div class="progress">	
+				<div class="progressbar"></div>
+			</div>
+			<div class="btn_begin"></div>
+		</div>
+		<div class="gameBody">
+			<div class="gameCanvas">
+				<canvas width="480" height="800" class="canvasFloorLayer"></canvas>
+			</div>
+		</div>
+		<div class="gameOver">
+			<div class="score"></div>
+			<div class="btn_prepare"></div>
+		</div>
+	</div>
+</body>
+</html>
+<script src="./js/lazy.js"></script>
+<script src="./js/touch.js"></script>
+<script>
+var can=document.querySelector("canvas");
+var pen=can.getContext("2d");
+
+var donkey={
+	x:170,
+	y:545,
+	g:8,
+	xg:10,
+	v:88,
+	xv:3,
+	s:0,
+};
+var floor={
+	y:230,
+	s:5
+};
+var hillnear={
+	y:230,
+	s:2
+};
+var hill={
+	y:220,
+	s:1
+};
+var sky={
+	y:1,
+	s:3
+};
+var  stairs=[];
+for(var i=0;i<100;i++){
+	stairs.push({
+		x:Math.floor(Math.random()*320),
+		y:-200*i+300,
+		s:12,   //速度
+		h:200,
+		xv:2,  //会动的云的横向速度
+		m:Math.floor(Math.random()*3),  //三种云
+		n:200,
+	})
+}			
+//gamebody
+function  run(){
+	lazyload(function(data){
+		pen.clearRect(0,0,480,800);
+		pen.drawImage(data.sky,0,2272,480,3027,0,0,480,3072);
+		pen.drawImage(data.hill,0,hill.y,480,603);		
+		pen.drawImage(data.hillnear,0,hillnear.y,480,613);
+		pen.drawImage(data.floor,0,floor.y,480,584);  
+		pen.drawImage(data.daiji,30,3,63,96,donkey.x,donkey.y,63,96); 
+		setTimeout(function(){
+			pen.clearRect(0,0,480,800);
+			pen.drawImage(data.sky,0,2272,480,3027,0,0,480,3072);
+			pen.drawImage(data.hill,0,hill.y,480,603);		
+			pen.drawImage(data.hillnear,0,hillnear.y,480,613);
+			pen.drawImage(data.floor,0,floor.y,480,584);  
+			pen.drawImage(data.daiji,30,3,63,96,donkey.x,donkey.y,63,96);
+			pen.drawImage(data.icon,0,0,512,105,50,390,512,105);   //ready
+		},1000)
+		setTimeout(function(){
+			pen.clearRect(0,0,480,800);
+			pen.drawImage(data.sky,0,2272,480,3027,0,0,480,3072);
+			pen.drawImage(data.hill,0,hill.y,480,603);		
+			pen.drawImage(data.hillnear,0,hillnear.y,480,613);
+			pen.drawImage(data.floor,0,floor.y,480,584); 
+			pen.drawImage(data.daiji,30,3,63,96,donkey.x,donkey.y,63,96); 
+			pen.drawImage(data.icon,0,140,512,85,120,390,512,105);    //go
+		},2000)
+		setTimeout(function(){
+			setInterval(function(){
+				if(donkey.y>=800){
+					var dom=document.querySelector(".gameOver");
+					var gameBody=document.querySelector(".gameBody");
+					gameBody.style.display = 'none'; 
+					dom.style.display= 'block';	
+					var score=document.querySelector(".score");
+					score.innerHTML=stairs[0].y;
+					return;
+				}
+				donkey.v-=donkey.g; 
+				donkey.y-=donkey.v;
+				donkey.x+=donkey.s;
+
+				pen.clearRect(0,0,480,800);
+				pen.drawImage(data.sky,0,2272,480,3027,0,0,480,3072);
+				pen.drawImage(data.hill,0,hill.y+=hill.s,480,603);
+				pen.drawImage(data.hillnear,0,hillnear.y+=hillnear.s,480,613);
+				pen.drawImage(data.floor,0,floor.y+=floor.s,480,584);  //房子
+		
+				for(var i=0;i<stairs.length;i++){
+					pen.drawImage(data.stairs,stairs[i].m*159,0,159,73,stairs[i].x,stairs[i].y+=stairs[i].s,159,73);
+					// if(stat==1){
+					// 	stairs[i].s=0;
+					// 	stairs[i].y+=stairs[i].n;
+					// 	stairs[i].n=0;
+					
+					// }
+					// if(stat==2){
+					// 	stairs[i].s=0;
+					// 	stairs[i].y+=stairs[i].n;
+					// 	stairs[i].n=20;
+					
+					// }
+					
+
+					//会移动的云
+					if(stairs[i].m==2){
+						stairs[i].x+=stairs[i].xv;
+						if(stairs[i].x>320){
+							stairs[i].xv=-stairs[i].xv;
+						}
+						if(stairs[i].x<0){
+							stairs[i].xv=-stairs[i].xv;
+						}
+				
+					}
+
+			//在驴子的速度为0的情况下发生碰撞  
+					if(donkey.v < 0){
+						//驴子和云的碰撞
+						if(touch(donkey.x,donkey.y,63,96,stairs[i].x,stairs[i].y,159,73)){	
+							donkey.g=4;
+							donkey.v=36;
+							//碰到破碎的云消失
+							if(stairs[i].m==1){
+								stairs.splice(i,1);
+							}
+							
+							//驴子碰到云 ，云向下移动
+							// var stat=0;
+							// var brr=[-1];
+							// brr.push(i);
+							// console.log(i);
+							// if(brr[brr.length-1]!=brr[brr.length-2]){
+							// 	stat=2;
+							// }else{
+							// 	stat=1;
+							// }						
+							
+							
+							// for(var j=0;j<stairs.length;j++){
+							
+							// stairs[j].s=0;
+							
+							// stairs[j].y+=stairs[j].n;
+							// if(stat==1){
+								
+							// stairs[j].n=0;
+							// }
+							// if(stat==2){									
+							// 	stairs[j].n=80;
+							
+							// }
+							
+							// }		
+
+														
+						}
+						
+					}
+
+				}
+
+				
+						
+				pen.drawImage(data.daiji,30,3,63,96,donkey.x,donkey.y,63,96); //驴子
+				
+			},1000/24)
+		},3000)	
+	
+	})
+
+}
+
+
+//左右键盘控制方向
+window.onkeydown=function(e){	
+	switch (e.keyCode) {
+		case 37:
+			donkey.s=-8;
+			break;
+		case 39:
+			donkey.s=8;
+			break;
+	}
+
+	if(donkey.x<-63){
+		donkey.x=460;
+	}else if(donkey.x>480){
+		donkey.x=-43;
+	}
+}
+window.onkeyup=function(){
+	donkey.s=0;
+}
+
+
+//gameCover
+var btn_begin=document.querySelector(".btn_begin");
+
+var progressbar=document.querySelector(".progressbar");
+var number =document.querySelector(".number");
+
+//进度条预加载
+// lazyload(function(data){
+// 	var len=arr.length;
+// 	var n=(data.length)/len*100;
+// 	number.innerHTML=n;
+// 	progressbar.style.width=400+"px";
+// })
+function perload(){
+	setTimeout(function(){
+		number.innerHTML=100;
+		progressbar.style.width=400+"px";
+	},1000)
+	// setTimeout(function(){
+	// 	number.innerHTML=50;
+	// 	progressbar.style.width=200+"px";
+	// },2000)
+	// setTimeout(function(){
+	// 	number.innerHTML=80;
+	// 	progressbar.style.width=320+"px";
+	// },2500)
+	// setTimeout(function(){
+	// 	number.innerHTML=100;
+	// 	progressbar.style.width=400+"px";
+	// },2000)	
+}
+perload();
+//点击开始按钮
+btn_begin.onclick=function(){
+	var gameCover=document.querySelector(".gameCover");
+	var gameBody=document.querySelector(".gameBody");
+	gameCover.style.display = 'none';
+	gameBody.style.display = 'block';
+	run();
+	
+}	
+
+//gameOver
+var  btn_prepare=document.querySelector(".btn_prepare");
+
+//点击准备按钮	
+btn_prepare.onclick=function(){
+	var gameOver=document.querySelector(".gameOver");
+	var gameCover=document.querySelector(".gameCover");
+	gameOver.style.display='none';
+	gameCover.style.display='block';
+	window.location.href = window.location.href;
+	// run();
+	
+}
+</script>

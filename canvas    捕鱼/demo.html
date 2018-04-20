@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>捕鱼</title>
+	<style>
+		*{
+			padding: 0;
+			margin: 0;
+		}
+		html,body{
+			height: 100%;
+		}
+		canvas{
+			background: url('bg.jpg') no-repeat
+		}
+	</style>
+</head>
+<body>
+	<canvas width="800" height="700"></canvas>
+</body>
+</html>
+<script>
+var can=document.querySelector("canvas");
+var pen=can.getContext("2d");
+var arr=["fish.png","pao.png","bullet.png"];
+var fishs=[];
+var pao=[];
+var bullet={
+	x:300,
+	y:620,
+	s:5
+}
+setInterval(function(){
+	fishs.push({
+		x:-100,
+		y:Math.random()*500,
+		s:Math.random()*10,
+		i:0,
+		d:Math.ceil(Math.random()*40-20)*Math.PI/180
+
+	})
+},3000)
+
+lazyload(arr,function(data){
+	setInterval(function(){
+		pen.clearRect(0,0,800,700);
+		for(var j=0;j<fishs.length;j++){
+			fishs[j].i++;
+			if(fishs[j].i==8){
+				fishs[j].i=0;
+			}
+			if(fishs[j].x>1400){
+				fishs.splice(j,1);
+			}
+			// pen.rotate(fishs[j].d); //存在bug  改变了鱼的位置  炮弹碰不到鱼   
+			pen.drawImage(data.fish,0,fishs[j].i*126,174,126,fishs[j].x+=fishs[j].s,fishs[j].y,174,126);
+			// pen.rotate(-fishs[j].d);
+		}
+		for(var i=0;i<pao.length;i++){
+			pen.drawImage(data.pao,pao[i].x,pao[i].y-=pao[i].s,24,26);
+			for(var k=0;k<fishs.length;k++){
+				if(touch(fishs[k].x,fishs[k].y,174,126,pao[i].x,pao[i].y,24,26)){
+					fishs.splice(k,1);
+					pao.splice(i,1);
+				}
+			}
+		}
+		
+		pen.drawImage(data.bullet,0,0,74,74,bullet.x,bullet.y,74,74);
+	},1000/24)
+	
+})
+window.onkeydown=function(e){
+	switch(e.keyCode){
+		case 37:   //向左
+		bullet.x-=bullet.s;
+		break;
+
+		case 39:   //向右
+		bullet.x+=bullet.s;
+		break;
+
+
+		case 32:   //空格
+		pao.push({
+			x:bullet.x+25,
+			y:bullet.y,
+			s:10
+		})
+	}
+}
+
+function touch(x1,y1,w1,h1,x2,y2,w2,h2){
+	if(x1>x2+w2 || y1>y2+h2 ||  x2>x1+w1  ||y2>y1+h1){
+		return false;  //没碰到
+
+	}else{
+		return  true;   //碰到了
+	}
+}
+function lazyload(arr,fun){
+	 var load=0;
+	 var images={};
+	 for(var i=0;i<arr.length;i++){
+	 	var img= new Image();
+	 	img.onload=function(){
+	 		load++;
+	 		if(load==arr.length){
+	 			// alert("全部加载完成");
+	 			fun(images);
+	 		}
+	 	}
+	 	img.src=arr[i];
+	 	// document.body.appendChild(img);
+
+	 	var name=arr[i].split(".")[0];
+	 	images[name]=img;
+	 	console.log(img);
+
+	 }
+}
+</script>

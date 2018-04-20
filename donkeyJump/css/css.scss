@@ -1,0 +1,105 @@
+*{
+	margin: 0;
+	padding: 0;
+}
+html,body{
+	height: 100%;
+}
+.donkeyJump{
+	width: 480px;
+	height: 800px;
+	position: absolute;
+	top: 0;
+	left: 50%;
+	margin-left: -240px;
+
+	.gameCover{
+		// display:none;
+		width: 480px;
+		height: 800px;
+
+		background: url('../images/background.jpg') no-repeat;
+		.font{
+			width: 400px;
+			height: 20px;
+			position:absolute;
+			top: 530px;
+			left: 40px;
+			color: #fff;
+			.number,.percent{
+				float: left;
+				height: 20px;
+			}
+
+		}
+		/* //进度条 */
+		.progress{
+			width: 400px;
+			height: 30px;
+			background: rgba(0,0,0,0);
+			position: absolute;
+			top: 550px;
+			left: 30px;
+		}
+		.progressbar{
+			width: 0;
+			height: 30px;
+			background:#ccc;
+		}
+		.btn_begin{
+			width: 166px;
+			height: 106px;
+			position: absolute;
+			left: 170px;
+			top: 630px;
+			background: url('../images/btn_begin.png') no-repeat;
+		}
+		.btn_begin:hover{
+			background: url('../images/btn_begin_1.png') no-repeat;
+		}
+	}
+	.gameBody{
+		display: none;
+		width: 480px;
+		height: 800px;
+		.gameCanvas{
+			width: 480px;
+			height: 800px;
+			
+		}
+	}
+	.gameOver{
+		display: none;
+		width: 480px;
+		height: 800px;
+
+		background: url('../images/background.jpg') -480px 0 no-repeat;
+		.score{
+			// width:150px;
+			// height: 80px;
+			// margin-left: 120px;
+			// margin-top: 490px;
+			font-size: 40px;
+			position:absolute;
+			left: 120px;
+			top: 490px;
+			color: #CC9966
+		}
+		.btn_prepare{
+			width: 166px;
+			height: 106px;
+			// margin-left: 170px;
+			// margin-top: 630px;
+			position: absolute;
+			left: 170px;
+			top: 630px;
+			background: url('../images/btn_prepare.png') no-repeat;
+		}
+		.btn_prepare:hover{
+			background: url('../images/btn_prepare_1.png') no-repeat;
+		}
+
+	}
+	
+}
+
